@@ -13,6 +13,11 @@ struct Product{
 	float price, discount;
 }pro;
 
+struct Update{
+	char new_name[100];
+	float new_price, new_discount;
+}up;
+
 void input(){
 	printf("Enter ID : "); scanf("%d", &pro.id);
 	printf("Enter Name : "); scanf("%s", &pro.name);
@@ -24,6 +29,11 @@ void head(){
 }
 void output(){
 	printf("%d\t  %s\t $%.2f\t %.2f\n", pro.id, pro.name, pro.price, pro.discount);
+}
+void update(){
+	printf("Enter New Name : "); scanf("%s", &up.new_name);
+	printf("Enter New Price : "); scanf("%f", &up.new_price);
+	printf("Enter New Discount : "); scanf("%f", &up.new_discount);
 }
 int main(){
 	
@@ -128,15 +138,32 @@ int main(){
 											}
 											case 4:{
 												
-												FILE *product_data;
+												FILE *product_data, *temp_data;
 												product_data = fopen("product.txt", "r");
-												int update;
+												temp_data = fopen("temp.txt", "w");
+												int id_to_update;
 												
-												printf("Enter Product ID to Update : "); scanf("%d", &update);
+												printf("Enter Product ID to Update : "); scanf("%d", &id_to_update);
 												
 												while(fscanf(product_data, "%d%s%f%f", &pro.id, pro.name, &pro.price, &pro.discount)==4){
-													
+													if(id_to_update == pro.id){
+														update();
+														strcpy(pro.name, up.new_name);
+														pro.price = up.new_price;
+														pro.discount = up.new_discount;
+														
+														fprintf(temp_data, "%d\t%s\t%.2f\t%.2f\n", id_to_update, up.new_name, up.new_price, up.new_discount);
+														printf("Product updated successfully.\n");
+													}else{
+											            fprintf(temp_data, "%d\t%s\t%.2f\t%.2f\n", pro.id, pro.name, pro.price, pro.discount);
+											        }
 												}
+												
+												fclose(product_data);
+												fclose(temp_data);
+												
+												remove("product.txt");
+												rename("temp.txt", "product.txt");
 												
 												break;
 											}
