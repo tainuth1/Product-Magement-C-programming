@@ -1,6 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <windows.h>
+
+void gotoxy(int x, int y) {
+    COORD coord;
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
 
 struct Admin{
 	char email[100], password[100];
@@ -19,16 +27,25 @@ struct Update{
 }up;
 
 void input(){
+	gotoxy(50, 8);
 	printf("Enter ID : "); scanf("%d", &pro.id);
+	gotoxy(50, 10);
 	printf("Enter Name : "); scanf("%s", &pro.name);
+	gotoxy(50, 12);
 	printf("Enter Price : "); scanf("%f",&pro.price);
+	gotoxy(50, 14);
 	printf("Enter Discount : "); scanf("%f", &pro.discount);
+	gotoxy(50, 16);
 }
-void head(){
-	printf("ID\t Name\t Price\t Discount\n");
+void head() {
+    printf("+-----+---------------+-------+----------+\n");
+    printf("| ID  |     Name      | Price | Discount |\n");
+    printf("+-----+---------------+-------+----------+\n");
 }
-void output(){
-	printf("%d\t  %s\t $%.2f\t %.2f\n", pro.id, pro.name, pro.price, pro.discount);
+
+void output() {
+    printf("|%3d | %-13s | $%4.2f |   %.2f   |\n", pro.id, pro.name, pro.price, pro.discount);
+    printf("+-----+---------------+-------+----------+\n");
 }
 void update(){
 	printf("Enter New Name : "); scanf("%s", &up.new_name);
@@ -40,71 +57,112 @@ int main(){
 	int op,admin_option;
 	do{
 		system("cls");
+		gotoxy(43, 8);
+		printf("[=====PRODUCT MANGEMENT SYSTEM=====]\n");
+		gotoxy(50, 10);
 		printf("1. Admin\n");
+		gotoxy(50, 12);
 		printf("2. Customer\n");
+		gotoxy(50, 14);
 		printf("0. Exit\n");
-		printf("Choose an Option : "); scanf("%d", &op);
+		gotoxy(50, 16);
+		printf("---> Choose an Option : "); scanf("%d", &op);
 		
 		switch(op){
 			case 1: {
 				
 				do{
+					system("cls");
+					gotoxy(43, 8);
+					printf("[=====PRODUCT MANGEMENT SYSTEM=====]\n");
+					gotoxy(50, 10);
 					printf("1. Register\n");
+					gotoxy(50, 12);
 					printf("2. Login\n");
+					gotoxy(50, 14);
 					printf("3. Show All Admin Account\n");
+					gotoxy(50, 16);
 					printf("0. Back\n");
-					printf("Choose an Option : "); scanf("%d", &admin_option);
+					gotoxy(50, 18);
+					printf("---> Choose an Option : "); scanf("%d", &admin_option);
 					
 					switch(admin_option){
 						case 1: {
 							system("cls");
 							FILE *admin_data;
 							admin_data = fopen("admin.txt", "a");
-							
+							gotoxy(43, 8);
+							printf("[=====Register Admin Account=====]\n");
+							gotoxy(50, 10);
 							printf("Enter Email  : "); scanf("%s", &admin.email);
+							gotoxy(50, 12);
 							printf("Enter Password: "); scanf("%s", &admin.password);
 							fprintf(admin_data, "%s\t%s\n", admin.email, admin.password);
+							gotoxy(50, 0);
 							printf("[==========]Admin Account Create Successfuly==========]");
 							fclose(admin_data);
 							
 							break;
 						}
 						case 2:{
+							system("cls");
 							int crud_option;
+							gotoxy(46, 8);
+							printf("[=====LOGIN=====]\n");
+							gotoxy(50, 10);
 							printf("Email : "); scanf("%s", &admin.login_email); 
+							gotoxy(50, 12);
 							printf("Password : "); scanf("%s", &admin.login_pass);
-							
+							gotoxy(50, 14);
+							system("cls");
 							FILE *admin_data;
 							admin_data = fopen("admin.txt", "r");
 							
 							while(fscanf(admin_data, "%s%s", admin.email, admin.password)==2){
 								if(strcmp(admin.login_email, admin.email) == 0 && strcmp(admin.login_pass, admin.password) == 0){
 									do{
+										gotoxy(46, 6);
+										printf("[=====Mangement Menu=====]\n");
+										gotoxy(50, 8);
 										printf("1. Input Product\n");
+										gotoxy(50, 10);
 										printf("2. Show product\n");
+										gotoxy(50, 12);
 										printf("3. Search\n");
-										printf("4. Update");
+										gotoxy(50, 14);
+										printf("4. Update\n");
+										gotoxy(50, 16);
+										printf("5. Delete\n");
+										gotoxy(50, 18);
 										printf("0. Back\n");
+										gotoxy(50, 20);
 										printf("Please choose an option : "); scanf("%d", &crud_option);
 										
 										switch(crud_option){
 											case 1:{
+												system("cls");
 												FILE *product_data;
 												product_data = fopen("product.txt", "a");
 												int i, n;
+												gotoxy(46, 6);
+												printf("[=====Input Product=====]\n");
+												gotoxy(50, 8);
 												printf("Number Of Product : "); scanf("%d", &n);
-												
+												system("cls");
 												for(i=0 ; i<n ; i++){
+													gotoxy(46, 6);
 													printf("[========Enter Product #%d========]\n", i+1);
 													input();
+													system("cls");
 													fprintf(product_data, "%d\t%s\t%.2f\t%.2f\n", pro.id, pro.name, pro.price, pro.discount);
 												}
 												
 												fclose(product_data);
-												
+												system("cls");
 												break;
 											}
 											case 2:{
+												system("cls");
 												FILE *product_data;
 												product_data = fopen("product.txt", "r");
 												
@@ -118,13 +176,14 @@ int main(){
 												break;
 											}
 											case 3:{
+												system("cls");
 												int search;
 												
 												FILE *product_data;
 												product_data = fopen("product.txt", "r");
 												
 												printf("Enter ID to Search : "); scanf("%d", &search);
-												
+												system("cls");
 												while(fscanf(product_data, "%d%s%f%f", &pro.id, pro.name, &pro.price, &pro.discount)==4){
 													if(search == pro.id){
 														head();
@@ -137,7 +196,7 @@ int main(){
 												break;
 											}
 											case 4:{
-												
+												system("cls");
 												FILE *product_data, *temp_data;
 												product_data = fopen("product.txt", "r");
 												temp_data = fopen("temp.txt", "w");
@@ -153,10 +212,37 @@ int main(){
 														pro.discount = up.new_discount;
 														
 														fprintf(temp_data, "%d\t%s\t%.2f\t%.2f\n", id_to_update, up.new_name, up.new_price, up.new_discount);
+														system("cls");
 														printf("Product updated successfully.\n");
 													}else{
 											            fprintf(temp_data, "%d\t%s\t%.2f\t%.2f\n", pro.id, pro.name, pro.price, pro.discount);
 											        }
+												}
+												
+												fclose(product_data);
+												fclose(temp_data);
+												
+												remove("product.txt");
+												rename("temp.txt", "product.txt");
+												
+												
+												break;
+											}
+											case 5:{
+												system("cls");
+												int deleted;
+												printf("Enter ID to Delete : "); scanf("%d", &deleted);
+												
+												FILE *product_data, *temp_data;
+												product_data = fopen("product.txt", "r");
+												temp_data = fopen("temp.txt", "w");
+												
+												while(fscanf(product_data, "%d%s%f%f", &pro.id, pro.name, &pro.price, &pro.discount)==4){
+													if(deleted == pro.id){
+														printf("[========Delete Success=======]\n");
+													}else{
+														fprintf(temp_data, "%d\t%s\t%.2f\t%.2f\n", pro.id, pro.name, pro.price, pro.discount);
+													}
 												}
 												
 												fclose(product_data);
