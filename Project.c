@@ -48,15 +48,18 @@ void output() {
     printf("+-----+---------------+-------+----------+\n");
 }
 void update(){
+	gotoxy(50, 8);
 	printf("Enter New Name : "); scanf("%s", &up.new_name);
+	gotoxy(50, 10);
 	printf("Enter New Price : "); scanf("%f", &up.new_price);
+	gotoxy(50, 12);
 	printf("Enter New Discount : "); scanf("%f", &up.new_discount);
 }
+
 int main(){
 	
 	int op,admin_option;
 	do{
-		system("cls");
 		gotoxy(43, 8);
 		printf("[=====PRODUCT MANGEMENT SYSTEM=====]\n");
 		gotoxy(50, 10);
@@ -85,6 +88,7 @@ int main(){
 					printf("0. Back\n");
 					gotoxy(50, 18);
 					printf("---> Choose an Option : "); scanf("%d", &admin_option);
+					system("cls"); //this one effect to customer case;
 					
 					switch(admin_option){
 						case 1: {
@@ -202,6 +206,7 @@ int main(){
 												temp_data = fopen("temp.txt", "w");
 												int id_to_update;
 												
+												gotoxy(50,6);
 												printf("Enter Product ID to Update : "); scanf("%d", &id_to_update);
 												
 												while(fscanf(product_data, "%d%s%f%f", &pro.id, pro.name, &pro.price, &pro.discount)==4){
@@ -280,6 +285,62 @@ int main(){
 					
 				}while(admin_option != 0);
 				
+				break;
+			}
+			case 2:{
+				int pro_id, qty;
+				float total, discount, payment;
+				FILE *product_data;
+				product_data = fopen("product.txt", "r");
+				system("cls");
+				head();
+				while(fscanf(product_data, "%d%s%f%f", &pro.id, pro.name, &pro.price, &pro.discount)==4){
+					output();
+				}
+				
+				fclose(product_data);
+				
+				FILE *pay;
+				pay = fopen("product.txt", "r");
+				
+				gotoxy(50, 2);
+				printf("[=====Buy Product=====]\n");
+				gotoxy(50, 4);
+				printf("Product ID to Buy : "); scanf("%d", &pro_id);
+				gotoxy(50, 6);
+				printf("Quantity : "); scanf("%d", &qty);
+				
+				while(fscanf(product_data, "%d%s%f%f", &pro.id, pro.name, &pro.price, &pro.discount)==4){
+					if(pro_id == pro.id){
+						total = qty*pro.price;
+						
+						
+						
+						system("cls");
+						
+						gotoxy(0, 0);
+						printf("\n+========= Invoice =========+\n");
+					    printf("|  ID : %d\n", pro.id);
+						printf("|\t\t\t    |\n");
+					    printf("|  Name : %s\n", pro.name);
+					    printf("|\t\t\t    |\n");
+					    printf("|  Price : $%.2f\n", pro.price);
+					    printf("|\t\t\t    |\n");
+					    printf("|  Quantity : %d\n", qty);
+					    printf("|\t\t\t    |\n");
+					    printf("|  Total : $%.2f\n", total);
+					    printf("|\t\t\t    |\n");
+					    printf("|  Discount : $%.2f \t    |\n", discount);  
+					   	printf("|\t\t\t    |\n");
+					    printf("|  Payment : $%.2f\n", payment);
+					    printf("+===========================+\n");
+											
+						
+						break;
+					}
+				}
+				
+				fclose(pay);
 				break;
 			}
 		}
