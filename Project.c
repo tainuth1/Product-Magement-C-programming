@@ -311,6 +311,7 @@ int main(){
 				printf("Product ID to Buy : "); scanf("%d", &pro_id);
 				if(pro_id == 12345){
 					system("cls");
+					fclose(pay);
 					goto START;
 				}
 				while(fscanf(product_data, "%d%s%f", &pro.id, pro.name, &pro.price)==3){
@@ -335,6 +336,7 @@ int main(){
 						printf("|  Payment : $%.2f\n", payment);
 						printf("+===========================+\n");
 						
+						fclose(pay);
 						gotoxy(43,4);
 						printf("=====Your purchase is successfully=====\n");
 						gotoxy(50,6);
@@ -348,11 +350,13 @@ int main(){
 					gotoxy(50,6);
 					printf("No Item!\n");
 					
+					fclose(pay);
 					gotoxy(50,8);
 					printf("Press 'Enter' to continue\n");
 				    ch=getch();
 				    system("cls");
 				    if(ch==13) goto AGAIN;
+				    if(ch==27) goto START;
 				}
 				fclose(pay);
 				break;

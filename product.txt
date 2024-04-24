@@ -1,2 +1,3 @@
-1	Coca_Cola	0.60
-2	Sting	0.75
+1	Vital	0.50
+2	Sting	0.30
+3	Prime	9.00
