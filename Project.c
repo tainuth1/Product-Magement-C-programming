@@ -350,6 +350,7 @@ int main(){
 					gotoxy(50,6);
 					printf("No Item!\n");
 					
+					
 					fclose(pay);
 					gotoxy(50,8);
 					printf("Press 'Enter' to continue\n");
