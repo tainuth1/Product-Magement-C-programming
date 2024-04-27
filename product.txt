@@ -1,3 +1,6 @@
 1	Vital	0.50
 2	Sting	0.30
 3	Prime	9.00
+4	Olate	0.70
+5	IZE	0.25
+6	V-Active	0.60

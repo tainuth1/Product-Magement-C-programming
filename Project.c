@@ -1,85 +1,23 @@
 #include <stdio.h>
-#include <string.h>
 #include <conio.h>
 #include <stdlib.h>
 #include <windows.h>
 
-struct Admin{
-	char email[100], password[100];
-	char login_email[100], login_pass[100];
-}admin;
 struct Product{
 	int id;
 	char name[100];
 	float price;
-}pro;
+}pro; //create object
 struct Update{
 	char new_name[100];
 	float new_price;
-}up;
+}up;//create object
 
 void gotoxy(int x, int y) {
     COORD coord;
     coord.X = x;
     coord.Y = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
-
-void regisLog(FILE *admin_data){
-	admin_data = fopen("admin.txt", "a");
-	gotoxy(43, 8);
-	printf("[=====Register Admin Account=====]\n");
-	gotoxy(50, 10);
-	printf("Enter Email  : "); scanf("%s", &admin.email);
-	gotoxy(50, 12);
-	printf("Enter Password: "); scanf("%s", &admin.password);
-	fprintf(admin_data, "%s\t%s\n", admin.email, admin.password);
-	fclose(admin_data);
-}
-
-
-void mainMenu(){
-	gotoxy(43, 8);
-	printf("[=====PRODUCT MANGEMENT SYSTEM=====]\n");
-	gotoxy(50, 10);
-	printf("1. Admin\n");
-	gotoxy(50, 12);
-	printf("2. Customer\n");
-	gotoxy(50, 14);
-	printf("0. Exit\n");
-	gotoxy(50, 16);
-}
-
-void PMSmenu(){
-	gotoxy(43, 8);
-	printf("[=====PRODUCT MANGEMENT SYSTEM=====]\n");
-	gotoxy(50, 10);
-	printf("1. Register\n");
-	gotoxy(50, 12);
-	printf("2. Login\n");
-	gotoxy(50, 14);
-	printf("3. Show All Admin Account\n");
-	gotoxy(50, 16);
-	printf("0. Back\n");
-	gotoxy(50, 18);
-}
-
-void manageMenu(){
-	gotoxy(46, 6);
-	printf("[=====Mangement Menu=====]\n");
-	gotoxy(50, 8);
-	printf("1. Input Product\n");
-	gotoxy(50, 10);
-	printf("2. Show product\n");
-	gotoxy(50, 12);
-	printf("3. Search\n");
-	gotoxy(50, 14);
-	printf("4. Update\n");
-	gotoxy(50, 16);
-	printf("5. Delete\n");
-	gotoxy(50, 18);
-	printf("0. Back\n");
-	gotoxy(50, 20);
 }
 
 //input product
@@ -184,113 +122,88 @@ void deleteProduct(FILE *product_data,int deleted){
 //Main Funtion
 int main(){
 	FILE *product_data,*admin_data,*pay;
-	int op,admin_option;
+	int op, pro_id, qty, crud_option;
 	char ch;
-	int pro_id, qty;
 	float total, payment;
 	do{
 		START:
-		mainMenu();
-		printf("---> Choose an Option : ");op=getch();
+		gotoxy(43, 8);
+		printf("[=====PRODUCT MANGEMENT SYSTEM=====]\n");
+		gotoxy(50, 10);
+		printf("1. Admin\n");
+		gotoxy(50, 12);
+		printf("2. Customer\n");
+		gotoxy(50, 14);
+		printf("0. Exit\n");
+		gotoxy(50, 16);
+		printf("---> Choose an Option : "); op=getch();
 		system("cls");
 		switch(op){
 			case '1': {
-				do{	
-					PMSmenu();
-					printf("---> Choose an Option : ");
-					admin_option=getch();
+				do{
+					MANAGE:
+					gotoxy(46, 6);
+					printf("[=====Mangement Menu=====]\n");
+					gotoxy(50, 8);
+					printf("1. Input Product\n");
+					gotoxy(50, 10);
+					printf("2. Show product\n");
+					gotoxy(50, 12);
+					printf("3. Search\n");
+					gotoxy(50, 14);
+					printf("4. Update\n");
+					gotoxy(50, 16);
+					printf("5. Delete\n");
+					gotoxy(50, 18);
+					printf("0. Back\n");
+					gotoxy(50, 20);
+					printf("Please choose an option : ");
+					crud_option=getch();
 					system("cls");
-					
-					switch(admin_option){
-						case '1': {
+					switch(crud_option){
+						//input product
+						case '1':{
 							system("cls");
-							regisLog(admin_data);
-							system("cls");
-							gotoxy(50, 0);
-							printf("[==========]Admin Account Create Successfuly[==========]");
-							fclose(admin_data);
+							inputProduct(product_data);
 							break;
 						}
+						//output product
 						case '2':{
-							char crud_option;
-							gotoxy(46, 8);
-							printf("[=====LOGIN=====]\n");
-							gotoxy(50, 10);
-							printf("Email : "); scanf("%s", &admin.login_email); 
-							gotoxy(50, 12);
-							printf("Password : "); scanf("%s", &admin.login_pass);
-							gotoxy(50, 14);
 							system("cls");
-							admin_data = fopen("admin.txt", "r");
-							
-							while(fscanf(admin_data, "%s%s", admin.email, admin.password)==2){
-								if(strcmp(admin.login_email, admin.email) == 0 && strcmp(admin.login_pass, admin.password) == 0){
-									do{
-										MANAGE:
-										manageMenu();
-										printf("Please choose an option : ");
-										crud_option=getch();
-										system("cls");
-										switch(crud_option){
-											//input product
-											case '1':{
-												system("cls");
-												inputProduct(product_data);
-												break;
-											}
-											//output product
-											case '2':{
-												system("cls");
-												outputData(product_data);
-												break;
-											}
-											//search product
-											case '3':{
-												system("cls");
-												int search;
-												gotoxy(50,6);
-												printf("Enter ID to Search : "); scanf("%d", &search);
-												searchProduct(product_data,search);
-												break;
-											}
-											//update product
-											case '4':{
-												system("cls");
-												int id_to_update;
-												gotoxy(50,6);
-												printf("Enter Product ID to Update : "); scanf("%d", &id_to_update);
-												updateProduct(product_data,id_to_update);
-												break;
-											}
-											//delete product
-											case '5':{
-												system("cls");
-												int deleted;
-												gotoxy(50,6);
-												printf("Enter ID to Delete : "); scanf("%d", &deleted);
-												deleteProduct(product_data,deleted);
-												break;
-											}
-										}	
-									}while(crud_option != '0');
-								}
-							}
-							fclose(admin_data);
+							outputData(product_data);
 							break;
 						}
+						//search product
 						case '3':{
-							FILE *admin_data;
-							admin_data = fopen("admin.txt", "r");
-							while(fscanf(admin_data, "%s %s", admin.email, admin.password)==2){
-								printf("=================================\n");
-								printf("Email : %s\n", admin.email);
-							}
-							fclose(admin_data);
+							system("cls");
+							int search;
+							gotoxy(50,6);
+							printf("[========Search Product=======]\n");
+							gotoxy(50,8);
+							printf("Enter ID to Search : "); scanf("%d", &search);
+							searchProduct(product_data, search);
+							break;
+						}
+						//update product
+						case '4':{
+							system("cls");
+							int id_to_update;
+							gotoxy(50,6);
+							printf("Enter Product ID to Update : "); scanf("%d", &id_to_update);
+							updateProduct(product_data, id_to_update);
+							break;
+						}
+						//delete product
+						case '5':{
+							system("cls");
+							int deleted;
+							gotoxy(50,6);
+							printf("Enter ID to Delete : "); scanf("%d", &deleted);
+							deleteProduct(product_data, deleted);
 							break;
 						}
 					}	
-				}while(admin_option != '0');
-				break;
+				}while(crud_option != '0');
 			}
 			case '2':{
 				AGAIN:	
@@ -309,7 +222,7 @@ int main(){
 				printf("[=====Buy Product=====]\n");
 				gotoxy(50, 4);
 				printf("Product ID to Buy : "); scanf("%d", &pro_id);
-				if(pro_id == 12345){
+				if(pro_id == 12345){  //Enter 12345 to go back to main menu
 					system("cls");
 					fclose(pay);
 					goto START;
@@ -350,10 +263,11 @@ int main(){
 					gotoxy(50,6);
 					printf("No Item!\n");
 					
-					
 					fclose(pay);
 					gotoxy(50,8);
-					printf("Press 'Enter' to continue\n");
+					printf("Press 'Enter' to continue.\n Press 'ESC' to Back.");
+					gotoxy(50,10);
+					printf("Press 'ESC' to Back.\n");
 				    ch=getch();
 				    system("cls");
 				    if(ch==13) goto AGAIN;
